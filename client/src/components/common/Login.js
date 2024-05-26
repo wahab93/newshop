@@ -35,6 +35,7 @@ export const Login = () => {
             <img src="./images/login.png" alt="" />
           </div>
           <div className="col-6">
+          <h1>Login</h1>
             <form onSubmit={loginUser}>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">Email address</label>
