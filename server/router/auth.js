@@ -24,7 +24,7 @@ const upload = multer({
 });
 
 // Add New Products
-router.post('/addProduct', upload.single('productImage'), async (req, res) => {
+router.post('/addEditProduct', upload.single('productImage'), async (req, res) => {
     try {
         // Extract product data from the request body
         const { pCategory, pName, pTitle, pPrice } = req.body;
@@ -50,41 +50,43 @@ router.post('/addProduct', upload.single('productImage'), async (req, res) => {
     }
 });
 
-// Edit Product
-router.put('/editProduct/:productId', upload.single('productImage'), async (req, res) => {
-    try {
-        // Extract product data from the request body
-        const { pCategory, pName, pTitle, pPrice } = req.body;
-        const productImage = req.file ? req.file.filename : null;
-        const productId = req.params.productId;
 
-        // Find the product by ID
-        const product = await Product.findById(productId);
 
-        // Update the product fields
-        if (product) {
-            product.pCategory = pCategory;
-            product.pName = pName;
-            product.pTitle = pTitle;
-            product.pPrice = pPrice;
-            if (productImage) {
-                product.productImage = productImage;
-            }
+// // Edit Product
+// router.put('/editProduct/:productId', upload.single('productImage'), async (req, res) => {
+//     try {
+//         // Extract product data from the request body
+//         const { pCategory, pName, pTitle, pPrice } = req.body;
+//         const productImage = req.file ? req.file.filename : null;
+//         const productId = req.params.productId;
 
-            // Save the updated product to the database
-            await product.save();
+//         // Find the product by ID
+//         const product = await Product.findById(productId);
 
-            // Respond with the updated product
-            res.json(product);
-        } else {
-            res.status(404).json({ error: 'Product not found' });
-        }
-    } catch (error) {
-        // Handle error
-        console.error('Error editing product:', error);
-        res.status(500).json({ error: 'An error occurred' });
-    }
-});
+//         // Update the product fields
+//         if (product) {
+//             product.pCategory = pCategory;
+//             product.pName = pName;
+//             product.pTitle = pTitle;
+//             product.pPrice = pPrice;
+//             if (productImage) {
+//                 product.productImage = productImage;
+//             }
+
+//             // Save the updated product to the database
+//             await product.save();
+
+//             // Respond with the updated product
+//             res.json(product);
+//         } else {
+//             res.status(404).json({ error: 'Product not found' });
+//         }
+//     } catch (error) {
+//         // Handle error
+//         console.error('Error editing product:', error);
+//         res.status(500).json({ error: 'An error occurred' });
+//     }
+// });
 
 
 

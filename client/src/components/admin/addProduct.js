@@ -20,7 +20,7 @@ export const AddProduct = () => {
                 formData.append('pTitle', productTitle);
                 formData.append('pPrice', productPrice);
 
-                const response = await fetch('/addProduct', {
+                const response = await fetch('/addEditProduct', {
                     method: 'POST',
                     body: formData,
                 });
