@@ -21,7 +21,7 @@ export const Products = () => {
                 const data = await productServices.getProducts(productsURL);
 
                 // Find the unique categories and add 'ALL'
-                const uniqueList = [...new Set(data.map(e => e.pCategory)), 'ALL'];
+                const uniqueList = [...new Set(data.map(e => e.productCategory)), 'ALL'];
                 setProductCat(uniqueList);
 
                 // If the filtered products array is empty, set the full data to productData
@@ -43,7 +43,7 @@ export const Products = () => {
             return setProductData(data)
         }
         const updateList = data.filter((e) => {
-            return e.pCategory === cat
+            return e.productCategory === cat
         })
         setProductData(updateList)
     }
@@ -83,17 +83,17 @@ export const Products = () => {
                     </div>
                     {
                         productData.map((product, i) => {
-                            const { _id, pName, pTitle, pPrice,productImage } = product
+                            const { _id, productName, productTitle, productPrice,productImage } = product
                             return (
                                 <>
                                     <div className="col-md-3" key={i}>
                                         <div className="card bg-light p-3">
                                             {/* <img src="/images/slider/banner-1.jpg" className="d-block w-100" alt="Banner" /> */}
                                             <Link to={`/products/${product._id}`}>
-                                                <img className='w-100 mb-3' style={{ objectFit: 'cover' }} height={200} src={process.env.REACT_APP_IMAGE_PATH + productImage} alt={pTitle} />
+                                                <img className='w-100 mb-3' style={{ objectFit: 'cover' }} height={200} src={process.env.REACT_APP_IMAGE_PATH + productImage} alt={productTitle} />
                                             </Link>
-                                            <p className='text-capitalize m-0'>{pName}</p>
-                                            <p>Rs. {pPrice}</p>
+                                            <p className='text-capitalize m-0'>{productName}</p>
+                                            <p>Rs. {productPrice}</p>
                                             <button className="btn btn-primary" onClick={() => addOrRemoveFavProduct(product)}>
                                                 {isFavProductInCart(_id) ? 'Remove from Fav' : 'Add to Fav'}
                                             </button>

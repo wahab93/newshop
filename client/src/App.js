@@ -18,6 +18,8 @@ import { Register } from './components/common/Register'
 import { Cart } from './components/cart'
 import { Product } from './components/product'
 import { Checkout } from './components/checkout'
+import { Orderlisting } from './components/admin/orderlisting'
+import { CategoryListing } from './components/admin/categoryListing'
 
 const App = () => {
   return (
@@ -49,6 +51,22 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/orderlisting"
+              element={
+                <PrivateRoute>
+                  <Orderlisting />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/categoryListing"
+              element={
+                <PrivateRoute>
+                  <CategoryListing />
                 </PrivateRoute>
               }
             />

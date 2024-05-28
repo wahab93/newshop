@@ -53,12 +53,12 @@ export const Product = () => {
                             product &&
                             <>
                                 <div className='col-md-6'>
-                                    <img src={process.env.REACT_APP_IMAGE_PATH + product.productImage} alt={product.pTitle} className='img-fluid' />
+                                    <img src={process.env.REACT_APP_IMAGE_PATH + product.productImage} alt={product.productTitle} className='img-fluid' />
                                 </div>
                                 <div className='col-md-6'>
-                                    <p>{product.pCategory}</p>
-                                    <p>{product.pName}</p>
-                                    <p>{product.pPrice}</p>
+                                    <p>{product.productCategory}</p>
+                                    <p>{product.productName}</p>
+                                    <p>{product.productPrice}</p>
                                     {isProductInCart(product._id) ?
                                         <Link to='/cart' className='btn btn-primary'>Go to Cart</Link>
                                         :

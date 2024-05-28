@@ -45,9 +45,17 @@ export const Navbar = () => {
                                 <Link className="nav-link" to="/contact">Contact</Link>
                             </li>
                             {stateAdmin &&
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/addproduct">Add Product</Link>
-                                </li>
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/addproduct">Add Product</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/orderlisting">Orders</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/categoryListing">Add Category</Link>
+                                    </li>
+                                </>
                             }
                             <li className="nav-item">
                                 <Link className="nav-link" to="/products">Products</Link>

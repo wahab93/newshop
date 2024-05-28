@@ -14,7 +14,7 @@ export const Cart = () => {
 
     // Calculate total amount using only newPrice
     const totalAmount = stateCart.reduce((total, product) => {
-        const price = product.pPrice || 0; // Use newPrice, default to 0 if not available
+        const price = product.productPrice || 0; // Use newPrice, default to 0 if not available
         const quantity = product.qty || 0;
 
         return total + price * quantity;
@@ -41,9 +41,9 @@ export const Cart = () => {
                                 return (
                                     <tr>
                                         <th scope="row">{e._id}</th>
-                                        <td>{e.pCategory}</td>
-                                        <td>{e.pName}</td>
-                                        <td>{e.pPrice}</td>
+                                        <td>{e.productCategory}</td>
+                                        <td>{e.productName}</td>
+                                        <td>{e.productPrice}</td>
                                         <td>
                                             <div className="input-group" style={{ width: '100px' }}>
                                                 <div className="input-group-btn">
@@ -55,7 +55,7 @@ export const Cart = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{e.qty * e.pPrice}</td>
+                                        <td>{e.qty * e.productPrice}</td>
                                         <td valign='middle'>
                                             <button className="btn btn-outline-primary" onClick={() => handleClose(e)}>Del</button>
                                         </td>

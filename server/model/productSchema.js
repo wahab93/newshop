@@ -2,29 +2,26 @@ const mongoose = require('mongoose');
 
 // Define the Product schema
 const productSchema = new mongoose.Schema({
-    pCategory: {
+    productCategory: {
         type: String,
         required: true
     },
-    pName: {
+    productName: {
         type: String,
         required: true,
     },
-    pTitle: {
+    productTitle: {
         type: String,
         required: true
     },
-    pPrice: {
+    isNew: { type: String, },
+    productPrice: {
         type: Number,
         required: true
     },
     productImage: {
         type: String
     },
-    // createdAt: {
-    //     type: Date,
-    //     default: Date.now,
-    // },
 });
 
 // Create the Product model

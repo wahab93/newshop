@@ -1,6 +1,7 @@
 export const apiHelper = {
     post,
     get,
+    put,
 }
 
 // get Requests
@@ -25,6 +26,19 @@ async function post(url, body) {
 
     return handleResponse(response);
 }
+
+// PUT Request
+async function put(url, body) {
+    // debugger
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+
+    return handleResponse(response);
+}
+
 
 // Handling Response
 async function handleResponse(response) {

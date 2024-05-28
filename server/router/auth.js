@@ -7,6 +7,8 @@ const bcrypt = require('bcrypt')
 const authenticate = require('../middleware/authenticate')
 const Product = require('../model/productSchema')
 const multer = require('multer');
+const orderSchema = require('../model/orderSchema');
+const Category = require('../model/categorySchema');
 
 
 const storage = multer.diskStorage({
@@ -23,72 +25,43 @@ const upload = multer({
     storage: storage
 });
 
-// Add New Products
+// Add or Edit New Product
 router.post('/addEditProduct', upload.single('productImage'), async (req, res) => {
     try {
-        // Extract product data from the request body
-        const { pCategory, pName, pTitle, pPrice } = req.body;
+        const { productCategory, productName, productTitle, productPrice, isNew, _id } = req.body;
         const productImage = req.file ? req.file.filename : null;
 
-        // Create a new Product instance
-        const product = new Product({
-            pCategory,
-            pName,
-            pTitle,
-            pPrice,
-            productImage,
-        });
+        let product;
+        if (isNew === 'false' && _id) {
+            // Editing an existing product
+            product = await Product.findById(_id);
+            if (!product) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
+            product.productCategory = productCategory;
+            product.productName = productName;
+            product.productTitle = productTitle;
+            product.productPrice = productPrice;
+            if (productImage) {
+                product.productImage = productImage;
+            }
+        } else {
+            // Adding a new product
+            product = new Product({
+                productCategory,
+                productName,
+                productTitle,
+                productPrice,
+                productImage,
+            });
+        }
 
-        // Save the product to the database
         await product.save();
-
-        // Respond with the created product
         res.status(201).json(product);
     } catch (error) {
-        // Handle error
         res.status(500).json({ error: 'An error occurred' });
     }
 });
-
-
-
-// // Edit Product
-// router.put('/editProduct/:productId', upload.single('productImage'), async (req, res) => {
-//     try {
-//         // Extract product data from the request body
-//         const { pCategory, pName, pTitle, pPrice } = req.body;
-//         const productImage = req.file ? req.file.filename : null;
-//         const productId = req.params.productId;
-
-//         // Find the product by ID
-//         const product = await Product.findById(productId);
-
-//         // Update the product fields
-//         if (product) {
-//             product.pCategory = pCategory;
-//             product.pName = pName;
-//             product.pTitle = pTitle;
-//             product.pPrice = pPrice;
-//             if (productImage) {
-//                 product.productImage = productImage;
-//             }
-
-//             // Save the updated product to the database
-//             await product.save();
-
-//             // Respond with the updated product
-//             res.json(product);
-//         } else {
-//             res.status(404).json({ error: 'Product not found' });
-//         }
-//     } catch (error) {
-//         // Handle error
-//         console.error('Error editing product:', error);
-//         res.status(500).json({ error: 'An error occurred' });
-//     }
-// });
-
-
 
 // get All Products
 router.get('/products', async (req, res) => {
@@ -103,11 +76,38 @@ router.get('/products', async (req, res) => {
     }
 });
 
+
+// Add or Edit New Product
+router.post('/addEditCategory', async (req, res) => {
+    try {
+        const { categoryName, categoryTitle, isNew, _id } = req.body;
+
+        let category;
+        if (isNew === 'false' && _id) {
+            // Editing an existing category
+            category = await Category.findById(_id);
+            if (!category) {
+                return res.status(404).json({ error: 'category not found' });
+            }
+            category.categoryName = categoryName;
+            category.categoryTitle = categoryTitle;
+        } else {
+            // Adding a new category
+            category = new Category({ categoryName, categoryTitle });
+        }
+
+        await category.save();
+        res.status(201).json(category);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+    }
+});
+
 // Get All categories
 router.get('/categories', async (req, res) => {
     try {
         // Fetch distinct categories from the database
-        const categories = await Product.distinct('pCategory');
+        const categories = await Product.distinct('productCategory');
 
         // Respond with the fetched categories
         res.json(categories);
@@ -237,6 +237,75 @@ router.post('/logout', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+
+
+// Create a new order
+router.post('/addOrder', async (req, res) => {
+    try {
+        const { billingAddress, payment, cart, totalAmount, customerId, orderStatus } = req.body;
+        // Helper function to generate order code
+        const generateOrderCode = () => {
+            const timestamp = Date.now();
+            const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `ORD-${timestamp}-${randomString}`;
+        };
+        // Generate order code
+        const orderCode = generateOrderCode();
+
+        // Create a new order instance
+        const newOrder = new orderSchema({
+            orderCode,
+            orderStatus,
+            customerId,
+            billingAddress,
+            payment,
+            cart,
+            totalAmount,
+        });
+        // Save the order to the database
+        await newOrder.save();
+
+        res.status(200).json(newOrder);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create order', error });
+    }
+});
+
+// Endpoint to update order status
+router.put('/orders/:orderId/status', async (req, res) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    try {
+        const order = await orderSchema.findById(orderId);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+
+        order.orderStatus = status;
+        await order.save();
+
+        // res.send(order);
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).send({ message: 'Error updating order status', error });
+    }
+});
+
+
+// Get all orders
+router.get('/getAllOrders', async (req, res) => {
+    try {
+        const orders = await orderSchema.find();
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch orders' });
+    }
+});
+
+
 
 
 module.exports = router;

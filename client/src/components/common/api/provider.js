@@ -55,6 +55,10 @@ export function ProductProvider({ children }) {
     const productsURL = `/products`;
     const ProductByIdURL =`/products/`;
     const categoriesURL = `/categories`;
+    const addOrderURL = `/addOrder`;
+    const updateOrderURL = `/orders`;
+    const getAllOrdersURL = `/getAllOrders`;
+    const addEditCategoryURL = `/addEditCategory`;
     // const login = `${baseUrl}Account/Login`;
 
     // Value to provide to consumers of the context
@@ -67,6 +71,10 @@ export function ProductProvider({ children }) {
         productsURL,
         ProductByIdURL,
         categoriesURL,
+        addOrderURL,
+        getAllOrdersURL,
+        addEditCategoryURL,
+        updateOrderURL,
         postOrder,
         LocationId,
         companyId,
